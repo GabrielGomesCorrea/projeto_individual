@@ -78,14 +78,36 @@ header h1{
 .frase{
     height: 650px;
     display: flex;
-    align-items: center;
+    align-items: start;
+    flex-direction: column;
 }
 .frase h1 {
     position: relative;
     color: #ffffff;
     z-index: 1;
     font-size: 80px;
-    margin: 100px;
+    margin-top: 150px;
+    margin-left: 100px;
+}
+.frase button{
+    z-index: 1;
+    border-radius: 10px;
+    border-width: 0px;
+    padding: 10px 1px 10px 1px;
+    margin-left: 100px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+.frase button:hover{
+    background-color: #cbcbcb;
+    transform: translateY(-5px);
+}
+.frase button a{
+    text-decoration: none;
+    position: relative;
+    padding: 10px 150px 10px 150px;
+    font-size: 25px;
+    color: #000000;
 }
 
 /*2º SEÇÃO*/
