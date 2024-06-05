@@ -17,7 +17,7 @@
             </div>
             <h3>Área da Marca</h3>
             <h4>Selecione uma imagem para postar no Feed:</h4>
-            <form id="form_postagem" method="post" onsubmit="return publicar()">
+            <form id="form_postagem" method="post">
                 <div class="selecione">
                     <input type="file" name="foto" id="foto" class="upload" accept="image/png, image/jpeg, image/jpg">
                     <label for="foto" class="texto-upload">Escolha um arquivo</label>
@@ -83,7 +83,8 @@
       body: formData
     })
       .then(res => {
-        window.location = "./perfil.html"
+        //window.location = "./perfil.html"
+        alert('Foto plodada');
       })
       .catch(err => {
         console.log(err);
