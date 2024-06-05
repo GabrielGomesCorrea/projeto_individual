@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../sustenstyle/css/feedMarca.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body>
+<body onload="atualizarFeed()">
     <section class="secao1">
         <aside class="menu-lateral-esquerdo">
             <div class="sustenstyle">
@@ -37,9 +37,9 @@
             <header>
                 <h1>Feed das Marcas</h1>
             </header>
-            <div class="feed">
+            <div class="feed" id="feed_container">
                 <script src="../sustenstyle/js/script.js"></script>
-                <div class="post">
+                <!--div class="post">
                     <div class="imagem"></div>
                     <div class="like-container">
                         <input type="checkbox" id="likeButton" class="like-checkbox">
@@ -58,7 +58,7 @@
                             <i class="fa fa-heart" aria-hidden="true"></i>
                         </label>
                     </div>
-                </div>
+                </div-->
             </div>
         </div>
         <aside class="menu-lateral-direito">
@@ -96,15 +96,17 @@
         document.getElementById("form_postagem").reset();
     }
 
-    function publicar() {
-        var idUsuario = sessionStorage.ID_USUARIO;
+    /*function publicar() {
+        var idMarca = sessionStorage.ID_USUARIO;
+
+        const formData = new FormData();
+        formData.append('foto', foto.files[0])
 
         var corpo = {
-            titulo: form_postagem.titulo.value,
-            descricao: form_postagem.descricao.value
+            foto: form_postagem.foto.value
         }
 
-        fetch(`/avisos/publicar/${idUsuario}`, {
+        fetch(`/avisos/publicar/${idMarca}`, {
             method: "post",
             headers: {
                 "Content-Type": "application/json"
@@ -131,7 +133,7 @@
 
         return false;
 
-    }
+    }*/
 
     function atualizarFeed() {
         fetch("/avisos/listar").then(function (resposta) {
@@ -162,6 +164,9 @@
                         var btnEditar = document.createElement("button");
                         var btnDeletar = document.createElement("button");
 
+                        var imgMarca = document.createElement("img");
+                        imgMarca.src = `../feedImagens/${publicacao.imagem_perfil}`;
+                        divPublicacao.appendChild(imgMarca);
 
                         spanID.innerHTML = "ID: <b>" + publicacao.idAviso + "</b>";
                         spanTitulo.innerHTML = "Título: <b>" + publicacao.titulo + "</b>";
