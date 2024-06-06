@@ -119,56 +119,32 @@
                         divPost.className = "post";
                         var divPublicacao = document.createElement("div");
                         divPublicacao.className = "imagem";
+
+                        // Adiciona os elementos do botão de curtida à estrutura do DOM
                         var divLike = document.createElement("div");
                         divLike.className = "like-container";
                         var inputLike = document.createElement("input");
-                        inputLike.className = "like-checkbox";
                         inputLike.type = "checkbox";
-                        
-                        /*var spanID = document.createElement("span");
-                        var spanTitulo = document.createElement("span");
-                        var spanNome = document.createElement("span");
-                        var divDescricao = document.createElement("div");
-                        var divButtons = document.createElement("div");
-                        var btnEditar = document.createElement("button");
-                        var btnDeletar = document.createElement("button");*/
+                        inputLike.className = "like-checkbox";
+                        var labelLike = document.createElement("label");
+                        labelLike.className = "like-label";
+                        var iLike = document.createElement("i");
+                        iLike.className = "fa fa-heart-o";
+                        var iLike2 = document.createElement("i");
+                        iLike2.className = "fa fa-heart";
 
-                        var imgMarca = document.createElement("img");
-                        imgMarca.src = `../feedImagens/${publicacao.imagem_post}`;
-                        divPublicacao.appendChild(imgMarca);
-
-                        /*spanID.innerHTML = "ID: <b>" + publicacao.idAviso + "</b>";
-                        spanTitulo.innerHTML = "Título: <b>" + publicacao.titulo + "</b>";
-                        spanNome.innerHTML = "Autor: <b>" + publicacao.nome + "</b>";
-                        divDescricao.innerHTML = "Descrição: <b>" + publicacao.descricao + "</b>";
-                        btnEditar.innerHTML = "Editar";
-                        btnDeletar.innerHTML = "Deletar";*/
-
-                        // divPublicacao.className = "publicacao";
-                        /*spanTitulo.id = "inputNumero" + publicacao.idAviso;
-                        spanNome.className = "publicacao-nome";
-                        spanTitulo.className = "publicacao-titulo";
-                        divDescricao.className = "publicacao-descricao";*/
-
-                        /*divButtons.className = "div-buttons"
-
-                        btnEditar.className = "publicacao-btn-editar"
-                        btnEditar.id = "btnEditar" + publicacao.idAviso;
-                        btnEditar.setAttribute("onclick", `editar(${publicacao.idAviso})`);
-
-                        btnDeletar.className = "publicacao-btn-editar"
-                        btnDeletar.id = "btnDeletar" + publicacao.idAviso;
-                        btnDeletar.setAttribute("onclick", `deletar(${publicacao.idAviso})`);*/
-
-                        /*divPublicacao.appendChild(spanID);
-                        divPublicacao.appendChild(spanNome);
-                        divPublicacao.appendChild(spanTitulo);
-                        divPublicacao.appendChild(divDescricao);
-                        divPublicacao.appendChild(divButtons);
-                        divButtons.appendChild(btnEditar);
-                        divButtons.appendChild(btnDeletar);*/
+                        // Adiciona os elementos do botão de curtida à estrutura do DOM
                         feed.appendChild(divPost);
                         divPost.appendChild(divPublicacao);
+                        divLike.appendChild(inputLike);
+                        divLike.appendChild(labelLike);
+                        labelLike.appendChild(iLike);
+                        labelLike.appendChild(iLike2);
+
+                        var imgMarca = document.createElement("img");
+                        imgMarca.className = "imagemPost";
+                        imgMarca.src = `../feedImagens/${publicacao.imagem_post}`;
+                        divPublicacao.appendChild(imgMarca);
                     }
 
                     finalizarAguardar();
