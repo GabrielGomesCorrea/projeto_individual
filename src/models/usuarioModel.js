@@ -23,7 +23,7 @@ function cadastrar(nome, telefone, email, senha) {
 }
 
 function salvar(usuario) {
-    const instrucao = `insert into post (idPost, fkMarca, imagem_post) values (default, '${usuario.nome}', '${usuario.imagem}')`;
+    const instrucao = `insert into post (idPost, fkMarca, dtPost, imagem_post) values (default, '${usuario.nome}', now(), '${usuario.imagem}')`;
   
     return database.executar(instrucao);
 }
