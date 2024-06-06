@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ptbr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed - Área das Marcas</title>
+    <script src="../js/sessao.js"></script>
+    <link rel="stylesheet" href="css/feedMarca.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body onload="atualizarFeed()">
+    <section class="secao1">
+        <aside class="menu-lateral-esquerdo">
+            <div class="sustenstyle">
+                <img src="/src/img/logo2_semfundo.svg" alt="" class="logo">
+                <h1>Sustenstyle</h1>
+            </div>
+            <h3>Área da Marca</h3>
+            <h4>Selecione uma imagem para postar no Feed:</h4>
+            <form id="form_postagem">
+                <div class="selecione">
+                    <input type="file" name="foto" id="foto" class="upload" accept="image/png, image/jpeg, image/jpg">
+                    <label for="foto" class="texto-upload">Escolha um arquivo</label>
+                </div>
+                <div id="preview-container" class="imagem-previa">
+                </div>
+                <script src="/js/preview.js"></script>
+                <div class="botao_postar">
+                    <button onclick="enviar()">Postar</button>
+                </div>
+            </form>
+            <div class="sair">
+                <button onclick="limparSessao()">Sair</button>
+            </div>
+        </aside>
+        <div class="centro">
+            <header>
+                <h1>Feed das Marcas</h1>
+            </header>
+            <div class="feed" id="feed_container">
+                <script src="/js/script.js"></script>
+                <!--div class="post">
+                    <div class="imagem"></div>
+                    <div class="like-container">
+                        <input type="checkbox" id="likeButton" class="like-checkbox">
+                        <label for="likeButton" class="like-label">
+                            <i class="fa fa-heart-o" aria-hidden="true"></i>
+                            <i class="fa fa-heart" aria-hidden="true"></i>
+                        </label>
+                    </div>
+                </div><br>
+                <div class="post">
+                    <div class="imagem"></div>
+                    <div class="like-container">
+                        <input type="checkbox" id="likeButton2" class="like-checkbox">
+                        <label for="likeButton2" class="like-label">
+                            <i class="fa fa-heart-o" aria-hidden="true"></i>
+                            <i class="fa fa-heart" aria-hidden="true"></i>
+                        </label>
+                    </div>
+                </div-->
+            </div>
+        </div>
+        <aside class="menu-lateral-direito">
+            <h1>Métricas das Curtidas</h1>
+            <div class="grafico">
+                <div>
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+        </aside>
+    </section>
+</body>
+</html>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    function enviar() {
+    var idMarca = sessionStorage.ID_USUARIO;
+    const formData = new FormData();
+    formData.append('foto', foto.files[0])
+
+    fetch(`/usuarios/cadastro/${idMarca}`, {
+      method: "POST",
+      body: formData
+    })
+      .then(res => {
+        //window.location = "./perfil.html"
+        alert('Foto plodada');
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+    function limparFormulario() {
+        document.getElementById("form_postagem").reset();
+    }
+
+    /*function publicar() {
+        var idMarca = sessionStorage.ID_USUARIO;
+
+        const formData = new FormData();
+        formData.append('foto', foto.files[0])
+
+        var corpo = {
+            foto: form_postagem.foto.value
+        }
+
+        fetch(`/avisos/publicar/${idMarca}`, {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(corpo)
+        }).then(function (resposta) {
+
+            console.log("resposta: ", resposta);
+
+            if (resposta.ok) {
+                window.alert("Post realizado com sucesso pelo usuario de ID: " + idUsuario + "!");
+                window.location = "/dashboard/mural.html";
+                limparFormulario();
+                finalizarAguardar();
+            } else if (resposta.status == 404) {
+                window.alert("Deu 404!");
+            } else {
+                throw ("Houve um erro ao tentar realizar a postagem! Código da resposta: " + resposta.status);
+            }
+        }).catch(function (resposta) {
+            console.log(`#ERRO: ${resposta}`);
+            finalizarAguardar();
+        });
+
+        return false;
+
+    }*/
+
+    function atualizarFeed() {
+        fetch("/avisos/listar").then(function (resposta) {
+            if (resposta.ok) {
+                if (resposta.status == 204) {
+                    var feed = document.getElementById("feed_container");
+                    var mensagem = document.createElement("span");
+                    mensagem.innerHTML = "Nenhum resultado encontrado."
+                    feed.appendChild(mensagem);
+                    throw "Nenhum resultado encontrado!!";
+                }
+
+                resposta.json().then(function (resposta) {
+                    console.log("Dados recebidos: ", JSON.stringify(resposta));
+
+                    var feed = document.getElementById("feed_container");
+                    feed.innerHTML = "";
+                    for (let i = 0; i < resposta.length; i++) {
+                        var publicacao = resposta[i];
+
+                        // criando e manipulando elementos do HTML via JavaScript
+                        var divPublicacao = document.createElement("div");
+                        /*var spanID = document.createElement("span");
+                        var spanTitulo = document.createElement("span");
+                        var spanNome = document.createElement("span");
+                        var divDescricao = document.createElement("div");
+                        var divButtons = document.createElement("div");
+                        var btnEditar = document.createElement("button");
+                        var btnDeletar = document.createElement("button");*/
+
+                        var imgMarca = document.createElement("img");
+                        imgMarca.src = `../feedImagens/${publicacao.imagem_post}`;
+                        divPublicacao.appendChild(imgMarca);
+
+                        /*spanID.innerHTML = "ID: <b>" + publicacao.idAviso + "</b>";
+                        spanTitulo.innerHTML = "Título: <b>" + publicacao.titulo + "</b>";
+                        spanNome.innerHTML = "Autor: <b>" + publicacao.nome + "</b>";
+                        divDescricao.innerHTML = "Descrição: <b>" + publicacao.descricao + "</b>";
+                        btnEditar.innerHTML = "Editar";
+                        btnDeletar.innerHTML = "Deletar";*/
+
+                        // divPublicacao.className = "publicacao";
+                        /*spanTitulo.id = "inputNumero" + publicacao.idAviso;
+                        spanNome.className = "publicacao-nome";
+                        spanTitulo.className = "publicacao-titulo";
+                        divDescricao.className = "publicacao-descricao";*/
+
+                        /*divButtons.className = "div-buttons"
+
+                        btnEditar.className = "publicacao-btn-editar"
+                        btnEditar.id = "btnEditar" + publicacao.idAviso;
+                        btnEditar.setAttribute("onclick", `editar(${publicacao.idAviso})`);
+
+                        btnDeletar.className = "publicacao-btn-editar"
+                        btnDeletar.id = "btnDeletar" + publicacao.idAviso;
+                        btnDeletar.setAttribute("onclick", `deletar(${publicacao.idAviso})`);*/
+
+                        /*divPublicacao.appendChild(spanID);
+                        divPublicacao.appendChild(spanNome);
+                        divPublicacao.appendChild(spanTitulo);
+                        divPublicacao.appendChild(divDescricao);
+                        divPublicacao.appendChild(divButtons);
+                        divButtons.appendChild(btnEditar);
+                        divButtons.appendChild(btnDeletar);*/
+                        feed.appendChild(divPublicacao);
+                    }
+
+                    finalizarAguardar();
+                });
+            } else {
+                throw ('Houve um erro na API!');
+            }
+        }).catch(function (resposta) {
+            console.error(resposta);
+            finalizarAguardar();
+        });
+    }
+
+
+    const ctx = document.getElementById('myChart');
+  
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio'],
+        datasets: [{
+          label: 'Curtidas',
+          data: [2, 5, 10, 19, 12],
+          backgroundColor: 'rgb(255,0,0)',
+          borderColor: 'rgb(0,0,0)',
+          fontColor: 'rgb(0,0,0)',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+</script>
