@@ -37,7 +37,7 @@ function curtir(idPost, idMarca) {
     return database.executar(instrucaoSql);
 }
 
-function deletarCurtida(idPublicacao, idUsuario) {
+function deletarCurtida(idPost, idMarca) {
     console.log("ACESSEI O AVISO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function deletar():", idPublicacao, idUsuario);
     var instrucaoSql = `
         delete from interacao where fkPost = ${idPost} and fkMarca = ${idMarca};

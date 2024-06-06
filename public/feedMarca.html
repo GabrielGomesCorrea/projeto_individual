@@ -91,7 +91,7 @@
             alert('Foto plodada');
         })
         .catch(err => {
-            console.log(err);
+            console.log('Estou no catch');
         })
     }
   }
@@ -118,7 +118,7 @@
                 feed.innerHTML = "";
                 for (let i = 0; i < resposta.length; i++) {
                     var publicacao = resposta[i];
-                    var idPublicacao = publicacao.idPost;
+                    var idPost = publicacao.idPost;
 
                     // criando e manipulando elementos do HTML via JavaScript
                     var divPost = document.createElement("div");
@@ -158,6 +158,7 @@
                     labelLike.appendChild(iLike);
                     labelLike.appendChild(iLike2);
 
+
                     obterEstatistica(idPost, (inputLike.id + 1))
                 }
 
@@ -172,7 +173,7 @@
         });
     }
 
-    function curtir(idPublicacao) {
+    function curtir(idPost) {
         var idMarca = sessionStorage.ID_USUARIO;
         var botao = document.getElementById("inputLike" + idPost)
 
@@ -260,7 +261,7 @@
             });
     }
 
-    function plotarGrafico(resposta, idUsuario) {
+    function plotarGrafico(resposta, idMarca) {
         var idMarca = sessionStorage.ID_USUARIO;
 
         console.log('iniciando plotagem do gráfico...');
@@ -272,7 +273,7 @@
         let dados = {
             labels: labels,
             datasets: [{
-                label: 'Quantidade de Publicação por Dia',
+                label: 'Quantidade de Curtida por Dia',
                 data: [],
                 fill: false,
                 backgroundColor: '#323ccd',
@@ -316,7 +317,7 @@
 
             var DataCompleta = `${dia}/${mes}/${ano}`
             labels.push(DataCompleta);
-            dados.datasets[0].data.push(registro.qtd);
+            dados.datasets[0].data.push(registro.qtdCurtida);
         }
 
         console.log('----------------------------------------------')
@@ -342,10 +343,10 @@
     }
 
     function obterDadosGrafico(idMarca) {
-        var idUsuario = sessionStorage.ID_USUARIO;
+        var idMarca = sessionStorage.ID_USUARIO;
 
 
-        fetch(`/medida/ultimas/${idUsuario}`, { cache: 'no-store' }).then(function (response) {
+        fetch(`/medidas/ultimas/${idMarca}`, { cache: 'no-store' }).then(function (response) {
             if (response.ok) {
                 response.json().then(function (resposta) {
                     console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);

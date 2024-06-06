@@ -31,9 +31,9 @@ router.post("/curtir/:idPost/:idMarca", function (req, res) {
   usuarioController.curtir(req, res);
 });
 
-router.post("/VerCurtida/", function (req, res) {
+router.post("/VerCurtida", function (req, res) {
   console.log("TO NA ROTA")
-  publiController.VerCurtida(req, res);
+  usuarioController.VerCurtida(req, res);
 
 });
 
