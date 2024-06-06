@@ -98,8 +98,76 @@ function salvar(req, res) {
     });
 }
 
+function deletarCurtida(req, res) {
+    var idPost = req.params.idPost;
+    var idMarca = req.params.idMarca
+
+    usuarioModel.deletarCurtida(idPost, idMarca)
+        .then(
+            function (resultado) {
+                res.json(resultado);
+            }
+        )
+        .catch(
+            function (erro) {
+                console.log(erro);
+                console.log("Houve um erro ao deletar o post: ", erro.sqlMessage);
+                res.status(500).json(erro.sqlMessage);
+            }
+        );
+}
+
+
+function curtir(req, res) {
+    var idPost = req.params.idPost;
+    var idMarca = req.params.idMarca;
+
+    usuarioModel.curtir(idPost, idMarca)
+        .then(
+            function (resultado) {
+                res.json(resultado);
+            }
+        )
+        .catch(
+            function (erro) {
+                console.log(erro);
+                console.log("Houve um erro ao curtir o post: ", erro.sqlMessage);
+                res.status(500).json(erro.sqlMessage);
+            }
+        );
+}
+
+function VerCurtida(req, res) {
+    var idMarca = req.body.idMarcaServer;
+    var idPost = req.body.idPostServer;
+
+
+    console.log(`Id Marca: ${idMarca}; Id Publicacao: ${idPost}`)
+
+    usuarioModel.VerCurtida(idPost, idMarca)
+        .then(
+            function (resultado) {
+                console.log(resultado)
+                if(resultado.length == 0){
+                    res.json('nenhuma');
+                }else
+                res.json(resultado);
+            }
+        )
+        .catch(
+            function (erro) {
+                console.log(erro);
+                console.log("Houve um erro em achar as curtidas: ", erro.sqlMessage);
+                res.status(500).json(erro.sqlMessage);
+            }
+        );
+}
+
 module.exports = {
     autenticar,
     cadastrar,
-    salvar
+    salvar,
+    deletarCurtida,
+    curtir,
+    VerCurtida
 }

@@ -77,18 +77,23 @@
     function enviar() {
     var idMarca = sessionStorage.ID_USUARIO;
     const formData = new FormData();
-    formData.append('foto', foto.files[0])
+    var fotoUpload = foto.value;
+    if(fotoUpload == ""){
+        alert('Nenhuma foto foi plodada');
+    }else{
+        formData.append('foto', foto.files[0])
 
-    fetch(`/usuarios/cadastro/${idMarca}`, {
-      method: "POST",
-      body: formData
-    })
-      .then(res => {
-        alert('Foto plodada');
-      })
-      .catch(err => {
-        console.log(err);
-      })
+        fetch(`/usuarios/cadastro/${idMarca}`, {
+        method: "POST",
+        body: formData
+        })
+        .then(res => {
+            alert('Foto plodada');
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
   }
 
     function limparFormulario() {
@@ -96,90 +101,266 @@
     }
 
     function atualizarFeed() {
-        fetch("/avisos/listar").then(function (resposta) {
-            if (resposta.ok) {
-                if (resposta.status == 204) {
-                    var feed = document.getElementById("feed_container");
-                    var mensagem = document.createElement("span");
-                    mensagem.innerHTML = "Nenhum resultado encontrado."
-                    feed.appendChild(mensagem);
-                    throw "Nenhum resultado encontrado!!";
+    fetch("/avisos/listar").then(function (resposta) {
+        if (resposta.ok) {
+            if (resposta.status == 204) {
+                var feed = document.getElementById("feed_container");
+                var mensagem = document.createElement("span");
+                mensagem.innerHTML = "Nenhum resultado encontrado."
+                feed.appendChild(mensagem);
+                throw "Nenhum resultado encontrado!!";
+            }
+
+            resposta.json().then(function (resposta) {
+                console.log("Dados recebidos: ", JSON.stringify(resposta));
+
+                var feed = document.getElementById("feed_container");
+                feed.innerHTML = "";
+                for (let i = 0; i < resposta.length; i++) {
+                    var publicacao = resposta[i];
+                    var idPublicacao = publicacao.idPost;
+
+                    // criando e manipulando elementos do HTML via JavaScript
+                    var divPost = document.createElement("div");
+                    divPost.className = "post";
+                    var divPublicacao = document.createElement("div");
+                    divPublicacao.className = "imagem";
+
+                    var imgMarca = document.createElement("img");
+                    imgMarca.className = "imagemPost";
+                    imgMarca.src = `../feedImagens/${publicacao.imagem_post}`;
+                    divPublicacao.appendChild(imgMarca);
+
+                    // Adiciona os elementos do botão de curtida à estrutura do DOM
+                    var divLike = document.createElement("div");
+                    divLike.className = "like-container";
+                    var inputLike = document.createElement("input");
+                    inputLike.type = "checkbox";
+                    inputLike.className = "like-checkbox";
+                    inputLike.id = `likeButton${i}`; // id único para cada botão de curtida
+                    var labelLike = document.createElement("label");
+                    labelLike.className = "like-label";
+                    labelLike.htmlFor = `likeButton${i}`; // associar label ao checkbox
+                    var iLike = document.createElement("i");
+                    iLike.className = "fa fa-heart-o";
+                    var iLike2 = document.createElement("i");
+                    iLike2.className = "fa fa-heart";
+
+                    inputLike.id = "inputCurtir" + publicacao.idPost;
+                    labelLike.setAttribute('for', inputLike.id);
+
+                    // Construindo a estrutura do post
+                    feed.appendChild(divPost);
+                    divPost.appendChild(divPublicacao);
+                    divPost.appendChild(divLike); // Adicionar o container do botão de curtida ao post
+                    divLike.appendChild(inputLike);
+                    divLike.appendChild(labelLike);
+                    labelLike.appendChild(iLike);
+                    labelLike.appendChild(iLike2);
+
+                    obterEstatistica(idPost, (inputLike.id + 1))
                 }
 
-                resposta.json().then(function (resposta) {
-                    console.log("Dados recebidos: ", JSON.stringify(resposta));
-
-                    var feed = document.getElementById("feed_container");
-                    feed.innerHTML = "";
-                    for (let i = 0; i < resposta.length; i++) {
-                        var publicacao = resposta[i];
-
-                        // criando e manipulando elementos do HTML via JavaScript
-                        var divPost = document.createElement("div");
-                        divPost.className = "post";
-                        var divPublicacao = document.createElement("div");
-                        divPublicacao.className = "imagem";
-
-                        // Adiciona os elementos do botão de curtida à estrutura do DOM
-                        var divLike = document.createElement("div");
-                        divLike.className = "like-container";
-                        var inputLike = document.createElement("input");
-                        inputLike.type = "checkbox";
-                        inputLike.className = "like-checkbox";
-                        var labelLike = document.createElement("label");
-                        labelLike.className = "like-label";
-                        var iLike = document.createElement("i");
-                        iLike.className = "fa fa-heart-o";
-                        var iLike2 = document.createElement("i");
-                        iLike2.className = "fa fa-heart";
-
-                        // Adiciona os elementos do botão de curtida à estrutura do DOM
-                        feed.appendChild(divPost);
-                        divPost.appendChild(divPublicacao);
-                        divLike.appendChild(inputLike);
-                        divLike.appendChild(labelLike);
-                        labelLike.appendChild(iLike);
-                        labelLike.appendChild(iLike2);
-
-                        var imgMarca = document.createElement("img");
-                        imgMarca.className = "imagemPost";
-                        imgMarca.src = `../feedImagens/${publicacao.imagem_post}`;
-                        divPublicacao.appendChild(imgMarca);
-                    }
-
-                    finalizarAguardar();
-                });
-            } else {
-                throw ('Houve um erro na API!');
-            }
+                finalizarAguardar();
+            });
+        } else {
+            throw ('Houve um erro na API!');
+        }
         }).catch(function (resposta) {
             console.error(resposta);
             finalizarAguardar();
         });
     }
 
+    function curtir(idPublicacao) {
+        var idMarca = sessionStorage.ID_USUARIO;
+        var botao = document.getElementById("inputLike" + idPost)
 
-    const ctx = document.getElementById('myChart');
-  
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio'],
-        datasets: [{
-          label: 'Curtidas',
-          data: [2, 5, 10, 19, 12],
-          backgroundColor: 'rgb(255,0,0)',
-          borderColor: 'rgb(0,0,0)',
-          fontColor: 'rgb(0,0,0)',
-          borderWidth: 2
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
+      ​  if (botao.checked == false) {
+            console.log("Criar função de apagar post escolhido - ID" + idPost);
+            fetch(`/usuarios/deletarCurtida/${idPost}/${idMarca}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(function (resposta) {
+
+                if (resposta.ok) {
+                    window.alert("Curtida deletada!");
+                    window.location.reload(true);
+                } else if (resposta.status == 404) {
+                    window.alert("Deu 404!");
+                } else {
+                    throw ("Houve um erro ao tentar realizar a postagem! Código da resposta: " + resposta.status);
+                }
+            }).catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            });
+        } else
+
+            fetch(`/usuarios/curtir/${idPost}/${idMarca}`, {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            }).then(function (resposta) {
+
+                console.log("resposta: ", resposta);
+
+                if (resposta.ok) {
+                    alert("Curtida efetuada")
+                    window.location.reload(true)
+                } else if (resposta.status == 404) {
+                    window.alert("Deu 404!");
+                } else {
+                    throw ("Houve um erro ao tentar realizar a postagem! Código da resposta: " + resposta.status);
+                }
+            }).catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+
+            });
+
+        return false;
+
+    }
+
+    function obterEstatistica(idPost, botao) {
+        var idUsuario = sessionStorage.ID_USUARIO;
+
+        fetch(`/usuarios/VerCurtida`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idPostServer: idPost,
+                idMarcaServer: idMarca,
+            }),
+        }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+
+                    console.log(idPublicacao);
+
+                    var BUTAO = document.getElementById("inputLike" + idPost)
+                    if (resposta == 'nenhuma') {
+                        botao.checked = false;
+                    } else {
+                        botao.checked = true;
+                    }
+
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+    }
+
+    function plotarGrafico(resposta, idUsuario) {
+        var idMarca = sessionStorage.ID_USUARIO;
+
+        console.log('iniciando plotagem do gráfico...');
+
+        // Criando estrutura para plotar gráfico - labels
+        let labels = [];
+
+        // Criando estrutura para plotar gráfico - dados
+        let dados = {
+            labels: labels,
+            datasets: [{
+                label: 'Quantidade de Publicação por Dia',
+                data: [],
+                fill: false,
+                backgroundColor: '#323ccd',
+                tension: 0.1
+            }],
+            options: {
+                scales: {
+                    x: {
+                        ticks: {
+                            color: 'red' // Cor dos rótulos do eixo X
+                        },
+                        grid: {
+                            color: 'blue' // Cor das linhas de grade do eixo X
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: 'green' // Cor dos rótulos do eixo Y
+                        },
+                        grid: {
+                            color: 'yellow' // Cor das linhas de grade do eixo Y
+                        }
+                    }
+                }
+            }
+        };
+
+        console.log('----------------------------------------------')
+        console.log('Estes dados foram recebidos pela funcao "obterDadosGrafico" e passados para "plotarGrafico":')
+        console.log(resposta)
+
+        // Inserindo valores recebidos em estrutura para plotar o gráfico
+        for (i = 0; i < resposta.length; i++) {
+            var registro = resposta[i];
+
+            var dataPost = new Date(registro.dtPost);
+            var ano = dataPost.getFullYear();
+            var mes = (dataPost.getMonth() + 1).toString().padStart(2, '0');
+            var dia = dataPost.getDate().toString().padStart(2, '0');
+            console.log(`Post: ${registro.Titulo}, Data: ${ano}-${mes}-${dia}`);
+
+            var DataCompleta = `${dia}/${mes}/${ano}`
+            labels.push(DataCompleta);
+            dados.datasets[0].data.push(registro.qtd);
         }
-      }
-    });
+
+        console.log('----------------------------------------------')
+        console.log('O gráfico será plotado com os respectivos valores:')
+        console.log('Labels:')
+        console.log(labels)
+        console.log('Dados:')
+        console.log(dados.datasets)
+        console.log('----------------------------------------------')
+
+        // Criando estrutura \para plotar gráfico - config
+        const config = {
+            type: 'bar',
+            data: dados,
+        };
+
+        // Adicionando gráfico criado em div na tela
+        let myChart = new Chart(
+            document.getElementById(`myChart`),
+            config
+        );
+
+    }
+
+    function obterDadosGrafico(idMarca) {
+        var idUsuario = sessionStorage.ID_USUARIO;
+
+
+        fetch(`/medida/ultimas/${idUsuario}`, { cache: 'no-store' }).then(function (response) {
+            if (response.ok) {
+                response.json().then(function (resposta) {
+                    console.log(`Dados recebidos: ${JSON.stringify(resposta)}`);
+                    resposta.reverse();
+
+                    plotarGrafico(resposta, idMarca);
+
+                });
+            } else {
+                console.error('Nenhum dado encontrado ou erro na API');
+            }
+        })
+            .catch(function (error) {
+                console.error(`Erro na obtenção dos dados p/ gráfico: ${error.message}`);
+            });
+    }
+
 </script>

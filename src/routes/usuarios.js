@@ -23,6 +23,20 @@ router.post('/cadastro/:idMarca', upload.single('foto'), (req, res) => {
   usuarioController.salvar(req, res);
 });
 
+router.delete("/deletarCurtida/:idPost/:idMarca", function (req, res) {
+  usuarioController.deletarCurtida(req, res);
+});
+
+router.post("/curtir/:idPost/:idMarca", function (req, res) {
+  usuarioController.curtir(req, res);
+});
+
+router.post("/VerCurtida/", function (req, res) {
+  console.log("TO NA ROTA")
+  publiController.VerCurtida(req, res);
+
+});
+
 /*router.get('/:id', upload.single('foto'), (req, res) => {
   usuarioController.buscarUsuarioPeloId(req, res);
 });*/
