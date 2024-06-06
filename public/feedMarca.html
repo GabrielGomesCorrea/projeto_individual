@@ -115,7 +115,16 @@
                         var publicacao = resposta[i];
 
                         // criando e manipulando elementos do HTML via JavaScript
+                        var divPost = document.createElement("div");
+                        divPost.className = "post";
                         var divPublicacao = document.createElement("div");
+                        divPublicacao.className = "imagem";
+                        var divLike = document.createElement("div");
+                        divLike.className = "like-container";
+                        var inputLike = document.createElement("input");
+                        inputLike.className = "like-checkbox";
+                        inputLike.type = "checkbox";
+                        
                         /*var spanID = document.createElement("span");
                         var spanTitulo = document.createElement("span");
                         var spanNome = document.createElement("span");
@@ -158,7 +167,8 @@
                         divPublicacao.appendChild(divButtons);
                         divButtons.appendChild(btnEditar);
                         divButtons.appendChild(btnDeletar);*/
-                        feed.appendChild(divPublicacao);
+                        feed.appendChild(divPost);
+                        divPost.appendChild(divPublicacao);
                     }
 
                     finalizarAguardar();
