@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - Marca</title>
-	<!--script src="./js/sessao.js"></script-->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/choose.css">
@@ -98,15 +97,11 @@
                 console.log(resposta);
 
                 resposta.json().then(json => {
-                    /*console.log(json);
-                    console.log(JSON.stringify(json));
-                    sessionStorage.EMAIL_USUARIO = json.email;
-                    sessionStorage.NOME_USUARIO = json.nome;*/
                     sessionStorage.ID_USUARIO = json.idMarca;
 
                     setTimeout(function () {
                         window.location = "feedMarca.html";
-                    }, 1000); // apenas para exibir o loading
+                    }, 500);
 
                 });
 
@@ -130,9 +125,7 @@
 
 
 	function cadastrar() {
-  
-	  //Recupere o valor da nova input pelo nome do id
-	  // Agora vá para o método fetch logo abaixo
+
 	  var nomeCadVar = nomeCad_input.value;
 	  var telefoneCadVar = telefoneCad_input.value;
 	  var emailCadVar = emailCad_input.value;
@@ -162,16 +155,13 @@
 		alert('A senha precisa ter pelo menos 6 caracteres');
 		return false;
 	  }
-  
-	  // Enviando o valor da nova input
+
 	  fetch("/usuarios/cadastrar", {
 		method: "POST",
 		headers: {
 		  "Content-Type": "application/json",
 		},
 		body: JSON.stringify({
-		  // crie um atributo que recebe o valor recuperado aqui
-		  // Agora vá para o arquivo routes/usuario.js
 		  nomeCadServer: nomeCadVar,
 		  telefoneCadServer: telefoneCadVar,
 		  emailCadServer: emailCadVar,
@@ -186,7 +176,7 @@
   
 			setTimeout(() => {
 			  window.location = "cadastro_login.html";
-			}, "1000");
+			}, "500");
 		  } else {
 			throw "Houve um erro ao tentar realizar o cadastro!";
 		  }

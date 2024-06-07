@@ -3,14 +3,14 @@ var database = require("../database/config");
 function buscarUltimasMedidas(idMarca, limite_linhas) {
 
     var instrucaoSql = `SELECT 
-                        fkPost, 
-                        COUNT(idInteracao) AS qtdCurtida 
+                        COUNT(idInteracao) AS qtdCurtida,
+                        dtCurtida
                     FROM 
                         interacao 
                     WHERE 
                         fkMarcaCurtida = ${idMarca} 
                     GROUP BY 
-                        fkPost 
+                        dtCurtida 
                     ORDER BY 
                         qtdCurtida DESC 
                     LIMIT ${limite_linhas};`;

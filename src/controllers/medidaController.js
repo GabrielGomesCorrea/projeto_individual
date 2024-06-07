@@ -1,4 +1,4 @@
-var medidaModel = require("../models/medidaModel");
+/*var medidaModel = require("../models/medidaModel");
 
 function buscarUltimasMedidas(req, res) {
 
@@ -12,7 +12,7 @@ function buscarUltimasMedidas(req, res) {
         if (resultado.length > 0) {
             res.status(200).json(resultado);
         } else {
-            res.status(204).send("Nenhum resultado encontrado!")
+            res.status(204).json("nada")
         }
     }).catch(function (erro) {
         console.log(erro);
@@ -41,7 +41,7 @@ function buscarUltimasMedidas(req, res) {
     });
 }*/
 
-module.exports = {
+/*module.exports = {
     buscarUltimasMedidas
-    //buscarMedidasEmTempoReal
-}
+    buscarMedidasEmTempoReal
+}*/
