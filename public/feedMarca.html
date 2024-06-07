@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/feedMarca.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body onload="atualizarFeed()">
+<body onload="atualizarFeed(), obterDadosGrafico()">
     <section class="secao1">
         <aside class="menu-lateral-esquerdo">
             <div class="sustenstyle">
@@ -24,7 +24,7 @@
                 </div>
                 <div id="preview-container" class="imagem-previa">
                 </div>
-                <script src="/js/preview.js"></script>
+                <!--script src="/js/preview.js"></script-->
                 <div class="botao_postar">
                     <button onclick="enviar()">Postar</button>
                 </div>
@@ -38,7 +38,7 @@
                 <h1>Feed das Marcas</h1>
             </header>
             <div class="feed" id="feed_container">
-                <script src="/js/script.js"></script>
+                <!--script src="/js/script.js"></script-->
                 <!--div class="post">
                     <div class="imagem"></div>
                     <div class="like-container">
@@ -159,7 +159,7 @@
                     labelLike.appendChild(iLike2);
 
 
-                    obterEstatistica(idPost, (inputLike.id + 1))
+                    //obterEstatistica(idPost, (inputLike.id + 1))
                 }
 
                 finalizarAguardar();
@@ -177,7 +177,7 @@
         var idMarca = sessionStorage.ID_USUARIO;
         var botao = document.getElementById("inputLike" + idPost)
 
-      ​  if (botao.checked == false) {
+         if (botao.checked == false) {
             console.log("Criar função de apagar post escolhido - ID" + idPost);
             fetch(`/usuarios/deletarCurtida/${idPost}/${idMarca}`, {
                 method: "DELETE",

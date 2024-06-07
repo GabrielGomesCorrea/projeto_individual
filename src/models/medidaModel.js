@@ -3,11 +3,17 @@ var database = require("../database/config");
 function buscarUltimasMedidas(idMarca, limite_linhas) {
 
     var instrucaoSql = `SELECT 
-        count(interacao.idInteracao) as qtdCurtida
-                    FROM interacao
-                    WHERE fkMarcaCurtida = ${idMarca}
-                    ORDER BY idInteracao DESC LIMIT ${limite_linhas}
-                    group by fkPost`;
+                        fkPost, 
+                        COUNT(idInteracao) AS qtdCurtida 
+                    FROM 
+                        interacao 
+                    WHERE 
+                        fkMarcaCurtida = ${idMarca} 
+                    GROUP BY 
+                        fkPost 
+                    ORDER BY 
+                        qtdCurtida DESC 
+                    LIMIT ${limite_linhas};`;
 
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
