@@ -73,12 +73,6 @@
 .texto-upload:hover {
   background-color: #808080;
 }
-.imagem-previa{
-    width: 100%;
-    margin-top: 15px;
-    position: relative;
-    left: -10px;
-}
 .botao_postar{
     display: flex;
     width: 140px;

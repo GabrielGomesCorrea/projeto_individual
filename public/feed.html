@@ -7,17 +7,15 @@
     <link rel="stylesheet" href="css/feed.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body>
+<body onload="atualizarFeed()">
     <section class="secao1">
         <aside class="menu-lateral-esquerdo">
             <div class="sustenstyle">
                 <img src="/src/img/logo2_semfundo.svg" alt="" class="logo">
                 <h1>Sustenstyle</h1>
             </div>
-            <h3>Acompanhe Marcas e Roupas Sustentáveis</h3>
-            <div class="botao_atualizar">
-                <button>Atualizar Feed</button>
-            </div>
+            <h3>Acompanhe Marcas de Roupas Sustentáveis <br>
+            Faça Parte da mudança!</h3>
             <div class="sair">
                 <button onclick="window.location.href='index.html'">Voltar para a Home</button>
             </div>
@@ -26,28 +24,7 @@
             <header>
                 <h1>Feed das Marcas</h1>
             </header>
-            <div class="feed">
-                <script src="/js/script.js"></script>
-                <div class="post">
-                    <div class="imagem"></div>
-                    <div class="like-container">
-                        <input type="checkbox" id="likeButton" class="like-checkbox">
-                        <label for="likeButton" class="like-label">
-                            <i class="fa fa-heart-o" aria-hidden="true"></i>
-                            <i class="fa fa-heart" aria-hidden="true"></i>
-                        </label>
-                    </div>
-                </div><br>
-                <div class="post">
-                    <div class="imagem"></div>
-                    <div class="like-container">
-                        <input type="checkbox" id="likeButton2" class="like-checkbox">
-                        <label for="likeButton2" class="like-label">
-                            <i class="fa fa-heart-o" aria-hidden="true"></i>
-                            <i class="fa fa-heart" aria-hidden="true"></i>
-                        </label>
-                    </div>
-                </div>
+            <div class="feed" id="feed_container">
             </div>
         </div>
         <aside class="menu-lateral-direito">
@@ -64,3 +41,101 @@
     </section>
 </body>
 </html>
+<script>
+    function atualizarFeed() {
+    fetch("/avisos/listar").then(function (resposta) {
+        if (resposta.ok) {
+            if (resposta.status == 204) {
+                var feed = document.getElementById("feed_container");
+                var mensagem = document.createElement("span");
+                mensagem.innerHTML = "Nenhum resultado encontrado."
+                feed.appendChild(mensagem);
+                throw "Nenhum resultado encontrado!!";
+            }
+
+            resposta.json().then(function (resposta) {
+                console.log("Dados recebidos: ", JSON.stringify(resposta));
+
+                var feed = document.getElementById("feed_container");
+                feed.innerHTML = "";
+                for (let i = 0; i < resposta.length; i++) {
+                    var publicacao = resposta[i];
+                    var idPost = publicacao.idPost;
+
+                    var divPost = document.createElement("div");
+                    divPost.className = "post";
+                    var divPublicacao = document.createElement("div");
+                    divPublicacao.className = "imagem";
+
+                    var imgMarca = document.createElement("img");
+                    imgMarca.className = "imagemPost";
+                    imgMarca.src = `../feedImagens/${publicacao.imagem_post}`;
+                    divPublicacao.appendChild(imgMarca);
+
+                    feed.appendChild(divPost);
+                    divPost.appendChild(divPublicacao);
+                }
+
+                finalizarAguardar();
+            });
+        } else {
+            throw ('Houve um erro na API!');
+        }
+        }).catch(function (resposta) {
+            console.error(resposta);
+            finalizarAguardar();
+        });
+    }
+
+    function curtir(idPost) {
+        var idMarca = sessionStorage.ID_USUARIO;
+        var botao = document.getElementById("inputCurtir" + idPost)
+
+         if (botao.checked == false) {
+            console.log("Criar função de apagar post escolhido - ID" + idPost);
+            fetch(`/usuarios/deletarCurtida/${idPost}/${idMarca}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(function (resposta) {
+
+                if (resposta.ok) {
+                    window.alert("Curtida deletada!");
+                    window.location.reload(true);
+                } else if (resposta.status == 404) {
+                    window.alert("Deu 404!");
+                } else {
+                    throw ("Houve um erro ao tentar realizar a postagem! Código da resposta: " + resposta.status);
+                }
+            }).catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+            });
+        } else
+
+            fetch(`/usuarios/curtir/${idPost}/${idMarca}`, {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            }).then(function (resposta) {
+
+                console.log("resposta: ", resposta);
+
+                if (resposta.ok) {
+                    alert("Curtida efetuada")
+                    window.location.reload(true)
+                } else if (resposta.status == 404) {
+                    window.alert("Deu 404!");
+                } else {
+                    throw ("Houve um erro ao tentar realizar a postagem! Código da resposta: " + resposta.status);
+                }
+            }).catch(function (resposta) {
+                console.log(`#ERRO: ${resposta}`);
+
+            });
+
+        return false;
+
+    }
+</script>
